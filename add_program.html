@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Program</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        a.home-button {
+            display: block;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 8px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        a.home-button:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Add New Gymnastics Program</h2>
+    
+    <a href="view_programs.php" class="home-button">Home</a>
+
+    <form action="insert_program.php" method="post">
+        <label for="program_name">Program Name</label>
+        <input type="text" id="program_name" name="program_name" required>
+
+        <label for="coach_name">Coach Name</label>
+        <input type="text" id="coach_name" name="coach_name" required>
+
+        <label for="coach_contact">Coach Contact</label>
+        <input type="text" id="coach_contact" name="coach_contact" placeholder="e.g. 082 123 4567" required>
+
+        <label for="duration_weeks">Duration (weeks)</label>
+        <input type="number" id="duration_weeks" name="duration_weeks" required>
+
+        <label for="skill_level">Skill Level</label>
+        <select id="skill_level" name="skill_level" required>
+            <option value="">--Select--</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+        </select>
+
+        <label for="description">Program Description</label>
+        <textarea id="description" name="description" placeholder="Enter program details..." required></textarea>
+
+        <button type="submit">Add Program</button>
+    </form>
+
+</body>
+</html>

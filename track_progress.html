@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Track Gymnast Progress</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    form {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="number"], input[type="date"], select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+    }
+    button {
+      background: #3498db;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    a.home-button {
+      display: block;
+      text-align: center;
+      margin: 0 auto 15px auto;
+      max-width: 400px;
+      padding: 8px;
+      background: #28a745;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    a.home-button:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Track Gymnast Progress</h2>
+  <a href="index.php" class="home-button">Home</a>
+
+  <form action="submit_progress.php" method="POST">
+    <label for="programSelect">Select Program:</label>
+    <select id="programSelect" name="program_id" required>
+      <option value="">Loading programs...</option>
+    </select>
+
+    <label for="gymnastSelect">Select Gymnast:</label>
+    <select id="gymnastSelect" name="gymnast_id" required>
+      <option value="">Select a program first</option>
+    </select>
+
+    <label for="progressNotes">Progress Notes:</label>
+    <textarea id="progressNotes" name="progress_notes" rows="4" required></textarea>
+
+    <label for="score">Score (optional):</label>
+    <input type="number" id="score" name="score" min="0" max="100" />
+
+    <button type="submit">Submit Progress</button>
+  </form>
+
+  <script>
+    // Load programs
+    fetch('get_programs.php')
+      .then(res => res.json())
+      .then(data => {
+        const programSelect = document.getElementById('programSelect');
+        programSelect.innerHTML = '';
+        if (data.length === 0) {
+          programSelect.innerHTML = '<option value="">No programs available</option>';
+        } else {
+          programSelect.innerHTML = '<option value="">-- Select Program --</option>';
+          data.forEach(p => {
+            const option = document.createElement('option');
+            option.value = p.id;
+            option.textContent = p.program_name;
+            programSelect.appendChild(option);
+          });
+        }
+      })
+      .catch(() => {
+        const programSelect = document.getElementById('programSelect');
+        programSelect.innerHTML = '<option value="">Error loading programs</option>';
+      });
+
+    // Load gymnasts when program changes
+    document.getElementById('programSelect').addEventListener('change', function () {
+      const programId = this.value;
+      const gymnastSelect = document.getElementById('gymnastSelect');
+      gymnastSelect.innerHTML = '<option>Loading gymnasts...</option>';
+
+      if (!programId) {
+        gymnastSelect.innerHTML = '<option value="">Select a program first</option>';
+        return;
+      }
+
+      fetch('get_gymnasts.php?program_id=' + programId)
+        .then(res => res.json())
+        .then(data => {
+          gymnastSelect.innerHTML = '';
+          if (data.length === 0) {
+            gymnastSelect.innerHTML = '<option value="">No gymnasts enrolled</option>';
+          } else {
+            gymnastSelect.innerHTML = '<option value="">-- Select Gymnast --</option>';
+            data.forEach(g => {
+              const option = document.createElement('option');
+              option.value = g.id;
+              option.textContent = g.gymnast_name;
+              gymnastSelect.appendChild(option);
+            });
+          }
+        })
+        .catch(() => {
+          gymnastSelect.innerHTML = '<option value="">Error loading gymnasts</option>';
+        });
+    });
+  </script>
+
+</body>
+</html>
+

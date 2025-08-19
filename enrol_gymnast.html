@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Enroll Gymnast</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    form {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background: #3498db;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    a.home-button {
+      display: block;
+      text-align: center;
+      margin: 0 auto 15px auto;
+      max-width: 400px;
+      padding: 8px;
+      background: #28a745;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    a.home-button:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Enroll Gymnast in Program</h2>
+  <a href="index.php" class="home-button">Home</a>
+
+  <form action="insert_enrolment.php" method="POST">
+    <label for="programDropdown">Select Program:</label>
+    <select id="programDropdown" name="program_id" required>
+      <option value="">Loading programs...</option>
+    </select>
+
+    <label for="gymnastName">Gymnast Name:</label>
+    <input type="text" id="gymnastName" name="gymnast_name" required />
+
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" min="1" max="100" required />
+
+    <label for="experienceLevel">Experience Level:</label>
+    <select id="experienceLevel" name="experience_level" required>
+      <option value="">-- Select Experience Level --</option>
+      <option value="Beginner">Beginner</option>
+      <option value="Intermediate">Intermediate</option>
+      <option value="Advanced">Advanced</option>
+    </select>
+
+    <button type="submit">Enroll Gymnast</button>
+  </form>
+
+  <script>
+    fetch('get_programs.php')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        const dropdown = document.getElementById('programDropdown');
+        dropdown.innerHTML = ''; // Clear loading text
+
+        if (data.length === 0) {
+          const option = document.createElement('option');
+          option.value = '';
+          option.textContent = 'No programs available';
+          dropdown.appendChild(option);
+        } else {
+          const defaultOption = document.createElement('option');
+          defaultOption.value = '';
+          defaultOption.textContent = '-- Select a Program --';
+          dropdown.appendChild(defaultOption);
+
+          data.forEach(program => {
+            const option = document.createElement('option');
+            option.value = program.id;
+            option.textContent = program.program_name;
+            dropdown.appendChild(option);
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching programs:', error);
+        const dropdown = document.getElementById('programDropdown');
+        dropdown.innerHTML = '<option value="">Error loading programs</option>';
+      });
+  </script>
+
+</body>
+</html>
+
